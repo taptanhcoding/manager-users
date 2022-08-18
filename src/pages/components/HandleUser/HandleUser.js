@@ -6,8 +6,8 @@ import { upUser } from '~/services/upuserService';
 const HandleUsers = createContext();
 function HandleUser({ children }) {
     //Add
-    const [newInfo, setInfo] = useState({});
-    const [upInfo, setUp] = useState({});
+    const [newInfo, setInfo] = useState();
+    const [upInfo, setUp] = useState();
     const [idDelete, setId] = useState();
     const [idUp, setIdUp] = useState();
 

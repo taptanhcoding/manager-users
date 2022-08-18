@@ -1,7 +1,7 @@
 function Home() {
     return (
         <>
-            <p>
+            <div>
                 Yêu cầu : <br />
                 Sử dụng API từ trang web
                 <a target="_blank" href="https://reqres.in/">
@@ -39,7 +39,7 @@ function Home() {
                 Yêu cầu backend (optional - không bắt buộc):
                 <br />
                 Sử dụng python django rest framework, tạo các api như trên trang web: https://reqres.in/
-            </p>
+            </div>
         </>
     );
 }

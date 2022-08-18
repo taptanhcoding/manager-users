@@ -22,14 +22,14 @@ import UpdateModal from '../components/Modal/UpdateModal';
 
 const cx = classNames.bind(styles);
 function ManagerUsers() {
+    const [listUser, setListUser] = useState([]);
     const handleUser = useContext(HandleUsers);
     const [addModal, setAddModal] = useState(false);
     const [removeModal, setRemoveModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [idU, setIdU] = useState();
-    const [listUser, setListUser] = useState([]);
     const [page, setPage] = useState(1);
-    useMemo(() => {
+    useEffect(() => {
         const getUsers1 = async () => {
             const users = await getUsers(page);
             setListUser(users);
@@ -58,10 +58,31 @@ function ManagerUsers() {
         if (handleUser.update.idUp) {
             setListUser((prevs) => {
                 updateFunction(prevs);
-                return prevs;
+                return [...prevs];
             });
         }
     }, [handleUser.update.idUp]);
+
+    const handleDescendingId = () => {
+        setListUser((prevs) => [...prevs.sort((a, b) => b.id - a.id)]);
+    };
+
+    const handleAscendingId = () => {
+        setListUser((prevs) => [...prevs.sort((a, b) => a.id - b.id)]);
+    };
+
+    const handleDescendingName = () => {
+        setListUser((prevs) => [
+            ...prevs.sort((a, b) => parseInt(b.first_name.charCodeAt(0)) - parseInt(a.first_name.charCodeAt(0))),
+        ]);
+    };
+
+    const handleAscendingName = () => {
+        setListUser((prevs) => [
+            ...prevs.sort((a, b) => parseInt(a.first_name.charCodeAt(0)) - parseInt(b.first_name.charCodeAt(0))),
+        ]);
+    };
+    console.log(listUser);
     return (
         <>
             <Nav className={cx('justify-content-between', 'align-items-center', 'mb-3', 'mt-3')} activeKey="/home">
@@ -91,18 +112,27 @@ function ManagerUsers() {
                     <tr>
                         <th className={cx('d-flex', 'justify-content-between')}>
                             ID
-                            <a>
-                                <FontAwesomeIcon icon={faArrowDown} />
-                                <FontAwesomeIcon icon={faArrowUp} />
-                            </a>
+                            <span>
+                                <span onClick={handleDescendingId}>
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                </span>
+                                <span onClick={handleAscendingId}>
+                                    {' '}
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                </span>
+                            </span>
                         </th>
                         <th>Email</th>
                         <th className={cx('d-flex', 'justify-content-between')}>
                             Fisrt name
-                            <a>
-                                <FontAwesomeIcon icon={faArrowDown} />
-                                <FontAwesomeIcon icon={faArrowUp} />
-                            </a>
+                            <span>
+                                <span onClick={handleDescendingName}>
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                </span>
+                                <span onClick={handleAscendingName}>
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                </span>
+                            </span>
                         </th>
                         <th>Last name</th>
                         <th>Action</th>
