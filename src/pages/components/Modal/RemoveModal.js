@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { deleteUser } from '~/services/deleteService';
 import { getUser } from '~/services/getuserService';
+import { HandleUsers } from '~/pages/components/HandleUser/HandleUser';
 
 function RemoveModal({ idUser, ...props }) {
     const [userValue, setUserValue] = useState();
+    const handleRemove = useContext(HandleUsers);
 
     useEffect(() => {
         if (idUser) {
@@ -14,15 +16,7 @@ function RemoveModal({ idUser, ...props }) {
             };
             getUserData();
         }
-    }, []);
-
-    const handleDelete = () => {
-        const deleteData = async () => {
-            await deleteUser(idUser);
-            props.onHide();
-        };
-    };
-
+    }, [idUser]);
     return (
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
@@ -31,14 +25,20 @@ function RemoveModal({ idUser, ...props }) {
 
             <Modal.Body>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email :</Form.Label>
+                    <Form.Label>Email : {userValue && userValue.email}</Form.Label>
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={props.onHide}>
                     Close
                 </Button>
-                <Button variant="primary" type="submit" onClick={handleDelete}>
+                <Button
+                    variant="primary"
+                    type="submit"
+                    onClick={() => {
+                        handleRemove.remove.handleDelete(idUser, props);
+                    }}
+                >
                     Confirm
                 </Button>
             </Modal.Footer>

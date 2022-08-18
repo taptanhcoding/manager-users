@@ -2,8 +2,7 @@ import * as request from '~/utils/httpRequest';
 
 export const deleteUser = async (q) => {
     try {
-        const res = await request.dele(`users/${q}`);
-        return res.data;
+        await request.dele(`users/${q}`);
     } catch (error) {
         console.log(error);
     }

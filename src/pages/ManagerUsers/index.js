@@ -18,12 +18,14 @@ import { getUsers } from '~/services/listusersService';
 import AddModal from '~/pages/components/Modal/AddModal ';
 import RemoveModal from '~/pages/components/Modal/RemoveModal';
 import { HandleUser, HandleUsers } from '~/pages/components/HandleUser/HandleUser';
+import UpdateModal from '../components/Modal/UpdateModal';
 
 const cx = classNames.bind(styles);
 function ManagerUsers() {
     const handleUser = useContext(HandleUsers);
     const [addModal, setAddModal] = useState(false);
     const [removeModal, setRemoveModal] = useState(false);
+    const [editModal, setEditModal] = useState(false);
     const [idU, setIdU] = useState();
     const [listUser, setListUser] = useState([]);
     const [page, setPage] = useState(1);
@@ -35,11 +37,31 @@ function ManagerUsers() {
         getUsers1();
     }, [page]);
 
-    useEffect(() => {
-        console.log(handleUser.add.newInfo);
-        setListUser((prev) => [handleUser.add.newInfo, ...prev]);
+    useMemo(() => {
+        if (handleUser.add.newInfo) {
+            setListUser((prev) => [handleUser.add.newInfo, ...prev]);
+        }
     }, [handleUser.add.newInfo]);
+    useMemo(() => {
+        if (handleUser.remove.idDelete) {
+            setListUser((prevs) => prevs.filter((prev) => prev.id !== handleUser.remove.idDelete));
+        }
+    }, [handleUser.remove.idDelete]);
 
+    const updateFunction = (prevs) => {
+        const upUserInfo = prevs.find((prev) => prev.id == handleUser.update.idUp);
+        upUserInfo.first_name = handleUser.update.upInfo.first_name;
+        upUserInfo.last_name = handleUser.update.upInfo.last_name;
+    };
+
+    useMemo(() => {
+        if (handleUser.update.idUp) {
+            setListUser((prevs) => {
+                updateFunction(prevs);
+                return prevs;
+            });
+        }
+    }, [handleUser.update.idUp]);
     return (
         <>
             <Nav className={cx('justify-content-between', 'align-items-center', 'mb-3', 'mt-3')} activeKey="/home">
@@ -98,7 +120,7 @@ function ManagerUsers() {
                                     variant="warning"
                                     onClick={() => {
                                         setIdU(user.id);
-                                        // setUpModal(true);
+                                        setEditModal(true);
                                     }}
                                 >
                                     Edit
@@ -154,6 +176,7 @@ function ManagerUsers() {
             </div>
             <AddModal show={addModal} onHide={() => setAddModal(false)} />
             <RemoveModal idUser={idU} show={removeModal} onHide={() => setRemoveModal(false)} />
+            <UpdateModal idUser={idU} show={editModal} onHide={() => setEditModal(false)} />
         </>
     );
 }

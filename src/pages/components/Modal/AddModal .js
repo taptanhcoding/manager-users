@@ -47,8 +47,7 @@ function AddModal({ ...props }) {
                     variant="primary"
                     type="submit"
                     onClick={() => {
-                        handleAdd.add.handleAdd(nameValue, jobValue);
-                        props.onHide();
+                        handleAdd.add.handleAdd(nameValue, jobValue, props);
                     }}
                 >
                     Confirm
