@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { Nav, Button, Form, Table, Pagination, Modal } from 'react-bootstrap';
+import { DebounceInput } from 'react-debounce-input';
 
 import classNames from 'classnames/bind';
 import styles from './ManagerUsers.module.scss';
@@ -18,17 +19,23 @@ import { getUsers } from '~/services/listusersService';
 import AddModal from '~/pages/components/Modal/AddModal ';
 import RemoveModal from '~/pages/components/Modal/RemoveModal';
 import { HandleUser, HandleUsers } from '~/pages/components/HandleUser/HandleUser';
-import UpdateModal from '../components/Modal/UpdateModal';
+import UpdateModal from '~/pages/components/Modal/UpdateModal';
+import ToastComp from '../components/Toast/Toast';
 
 const cx = classNames.bind(styles);
 function ManagerUsers() {
     const [listUser, setListUser] = useState([]);
+    const [listUserSearch, setListUserSearch] = useState([]);
+    const [searchValue, setSearchValue] = useState('');
     const handleUser = useContext(HandleUsers);
     const [addModal, setAddModal] = useState(false);
     const [removeModal, setRemoveModal] = useState(false);
     const [editModal, setEditModal] = useState(false);
     const [idU, setIdU] = useState();
     const [page, setPage] = useState(1);
+    const [showToastUpdate, setShowToastUpdate] = useState(false);
+    const [showToastAdd, setShowToastAdd] = useState(false);
+    const [showToastDelete, setShowToastDelete] = useState(false);
     useEffect(() => {
         const getUsers1 = async () => {
             const users = await getUsers(page);
@@ -40,11 +47,13 @@ function ManagerUsers() {
     useMemo(() => {
         if (handleUser.add.newInfo) {
             setListUser((prev) => [handleUser.add.newInfo, ...prev]);
+            setShowToastAdd(true);
         }
     }, [handleUser.add.newInfo]);
     useMemo(() => {
         if (handleUser.remove.idDelete) {
             setListUser((prevs) => prevs.filter((prev) => prev.id !== handleUser.remove.idDelete));
+            setShowToastDelete(true);
         }
     }, [handleUser.remove.idDelete]);
 
@@ -60,8 +69,9 @@ function ManagerUsers() {
                 updateFunction(prevs);
                 return [...prevs];
             });
+            setShowToastUpdate(true);
         }
-    }, [handleUser.update.idUp]);
+    }, [handleUser.update.upInfo]);
 
     const handleDescendingId = () => {
         setListUser((prevs) => [...prevs.sort((a, b) => b.id - a.id)]);
@@ -82,7 +92,15 @@ function ManagerUsers() {
             ...prevs.sort((a, b) => parseInt(a.first_name.charCodeAt(0)) - parseInt(b.first_name.charCodeAt(0))),
         ]);
     };
-    console.log(listUser);
+    const handleSearchUser = (e) => {
+        // const newU = listUser.filter((user) => user.email.includes(e.target.value));
+        setSearchValue(e.target.value);
+        if (e.target.value !== '') {
+            setListUserSearch([...listUser.filter((user) => user.email.includes(e.target.value))]);
+        } else {
+            setListUserSearch([]);
+        }
+    };
     return (
         <>
             <Nav className={cx('justify-content-between', 'align-items-center', 'mb-3', 'mt-3')} activeKey="/home">
@@ -100,13 +118,41 @@ function ManagerUsers() {
                     </Button>
                 </Nav.Item>
             </Nav>
-
-            <Form.Control
-                type="email"
-                id="inputPassword5"
-                placeholder="Search user by email"
-                className={cx('input-search', 'mb-3')}
-            />
+            <div className={cx('search', 'position-relative')}>
+                <DebounceInput
+                    className={cx('input-search', 'mb-3', 'form-control')}
+                    debounceTimeout={500}
+                    placeholder="Search user by email"
+                    onChange={handleSearchUser}
+                />
+                <ToastComp
+                    className={cx('toast-nofication', 'position-absolute')}
+                    show={showToastUpdate}
+                    onClose={() => setShowToastUpdate(!showToastUpdate)}
+                    autohide={true}
+                    delay={2000}
+                    styleToast="Warning"
+                    value="cập nhật thành công"
+                />
+                <ToastComp
+                    className={cx('toast-nofication', 'position-absolute')}
+                    show={showToastDelete}
+                    onClose={() => setShowToastDelete(!showToastDelete)}
+                    autohide={true}
+                    delay={2000}
+                    styleToast="Danger"
+                    value="Xóa thành công"
+                />
+                <ToastComp
+                    className={cx('toast-nofication', 'position-absolute')}
+                    show={showToastAdd}
+                    onClose={() => setShowToastAdd(!showToastAdd)}
+                    autohide={true}
+                    delay={2000}
+                    styleToast="Success"
+                    value="Thêm Thành Công"
+                />
+            </div>
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -139,7 +185,7 @@ function ManagerUsers() {
                     </tr>
                 </thead>
                 <tbody>
-                    {listUser.map((user, index) => (
+                    {(searchValue.length == 0 ? listUser : listUserSearch).map((user, index) => (
                         <tr key={index}>
                             <td>{user.id}</td>
                             <td>{user.email}</td>

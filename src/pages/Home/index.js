@@ -19,8 +19,6 @@ function Home() {
                     <li> Hiển thị tất cả các User</li>
                     <li> Tìm kiếm User theo Id</li>
                     <li> Sắp xếp theo FirstName</li>
-                    <li> Import User từ file .csv</li>
-                    <li> Export User ra file .csv</li>
                 </ul>
                 Tự do tùy chỉnh html, css, để có một website nhẹ nhàng, khoa học và đẹp.
                 <br />
