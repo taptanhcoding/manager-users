@@ -8,6 +8,14 @@
     animation: show 0.5s linear;
 }
 
+.table-wrapp {
+    overflow-x: scroll;
+}
+
+.table-user {
+    min-width: 695px;
+}
+
 @keyframes show {
     from {
         transform: translateX(calc(100% + 30px));

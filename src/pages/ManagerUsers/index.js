@@ -153,7 +153,7 @@ function ManagerUsers() {
                     value="Thêm Thành Công"
                 />
             </div>
-            <Table striped bordered hover>
+            <Table striped bordered hover responsive="sm" className={cx('table-user')}>
                 <thead>
                     <tr>
                         <th className={cx('d-flex', 'justify-content-between')}>

@@ -1,6 +1,11 @@
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+
 import styles from 'bootstrap/dist/css/bootstrap.min.css';
 import myStyles from './Header.module.scss';
-import { Dropdown, Navbar } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 
@@ -17,36 +22,24 @@ function Header() {
         setNameAd('');
     };
     return (
-        <nav className={cx('navbar', 'navbar-expand-lg', 'bg-light')}>
-            <div className={cx('container-fluid')}>
-                <Link className="navbar-brand" to={config.home}>
-                    Chuyen's App
-                </Link>
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarText"
-                    aria-controls="navbarText"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className={cx('"navbar-toggler-icon"')}></span>
-                </button>
-                <div className="collapse navbar-collapse justify-content-between" id="navbarText">
-                    <ul className={cx('navbar-nav', 'mb-2', 'mb-lg-0')}>
-                        <li className="nav-item">
+        <Navbar bg="light" expand="lg">
+            <Container>
+                <Navbar.Brand to={config.home}> Chuyen's App</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse className="justify-content-between " id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                        <Nav.Item>
                             <Link className="nav-link active" aria-current="page" to={config.home}>
                                 Home
                             </Link>
-                        </li>
-                        <li className="nav-item">
+                        </Nav.Item>
+                        <Nav.Item>
                             <Link className="nav-link" to={nameAd ? config.managerusers : config.login}>
                                 Manager User
                             </Link>
-                        </li>
-                    </ul>
-                    <ul className={cx('navbar-nav', 'mb-2', 'mb-lg-0')}>
+                        </Nav.Item>
+                    </Nav>
+                    <Nav>
                         {admin && (
                             <li className="nav-item">
                                 <Link className="nav-link" aria-current="page" to={config.home}>
@@ -54,29 +47,21 @@ function Header() {
                                 </Link>
                             </li>
                         )}
-                        <li className="nav-item">
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    Setting
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    {admin ? (
-                                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                                    ) : (
-                                        <Dropdown.Item>
-                                            <Link className="link" to={config.login}>
-                                                Login
-                                            </Link>
-                                        </Dropdown.Item>
-                                    )}
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                        <NavDropdown title="Setting" id="basic-nav-dropdown">
+                            {admin ? (
+                                <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                            ) : (
+                                <NavDropdown.Item>
+                                    <Link className="link" to={config.login}>
+                                        Login
+                                    </Link>
+                                </NavDropdown.Item>
+                            )}
+                        </NavDropdown>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     );
 }
 

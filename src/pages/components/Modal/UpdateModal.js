@@ -54,9 +54,6 @@ function UpdateModal({ idUser, ...props }) {
                             }}
                         />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Check me out" />
-                    </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.onHide}>
