@@ -82,9 +82,10 @@ function ManagerUsers() {
     };
 
     const handleDescendingName = () => {
-        setListUser((prevs) => [
-            ...prevs.sort((a, b) => parseInt(b.first_name.charCodeAt(0)) - parseInt(a.first_name.charCodeAt(0))),
-        ]);
+        // setListUser((prevs) => [
+        //     ...prevs.sort((a, b) => parseInt(b.first_name.charCodeAt(0)) - parseInt(a.first_name.charCodeAt(0))),
+        // ]);
+        setListUser((prevs) => [...prevs.sort({ first_name: 'asc' })]);
     };
 
     const handleAscendingName = () => {
